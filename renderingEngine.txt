@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Rendering Engine</title>
+</head>
+<body>
+    <table border="2" id="table-rendering">
+            <thead>
+                <tr>
+                    <th>id</th><th>name</th><th>age</th><th>teacher</th><th>profession</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+    </table>
+
+    <script>
+        //data object key-value-pairs
+        let Student = function (id, name, age, teacher, profession) {
+            this.id = id;
+            this.name = name;
+            this.age = age;
+            this.teacher = teacher;
+            this.profession = profession;
+        }
+        
+        //ask server for data 
+        let serverData = [
+            new Student(11, 'ari', 30, 'ariel', 'programmer'),
+            new Student(22, 'dudi', 22, 'moshe', 'doctor'),
+            new Student(33, 'avi', 25, 'chaim', 'plumber'),
+            new Student(44, 'zalmi', 21, 'daniel', 'electrician'),
+            new Student(55, 'yudi', 33, 'avi', 'painter'),
+            new Student(66, 'gamli', 35, 'abc', 'driver'),
+            new Student(77, 'shmuli', 22, 'def', 'rebbe')
+        ];
+        //template html string 
+        let studentTemplate = '<tr><td>{{id}}</td><td>{{name}}</td><td>{{age}}</td><td>{{teacher}}</td><td>{{profession}}</td></tr>';
+
+        
+        //rendering engine to merge data into template
+        function renderingEngine(template, data) {
+            let frontSplitArr = template.split('{{');
+            for (let i = 1; i < frontSplitArr.length; i++) { //start at index 1 bc 1st index is html
+                let fragment = frontSplitArr[i]; // ie: id}}</td><td>
+                let endSplitArr = fragment.split('}}'); // returns [param, html]
+                frontSplitArr[i] = data[ endSplitArr[0] ] + endSplitArr[1];   
+            }
+            return frontSplitArr.join('')
+        }
+
+        let tbody = document.querySelector('#table-rendering tbody');
+        for (let i = 0; i < serverData.length; i++) {
+            const studentData = serverData[i];
+            tbody.innerHTML += renderingEngine(studentTemplate, studentData); 
+        }
+
+    </script>
+    
+</body>
+</html>
